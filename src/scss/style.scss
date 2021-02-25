@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+#root, .window-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.game {
+    display: flex;
+    align-items: center;
+    &__container{
+        background-color: #CCC;
+    }
+    &__statistics {
+        display: flex;
+        justify-content: center;
+        &__points {
+            margin-left: 10px;
+        }
+    }
+
+}
