@@ -7,47 +7,77 @@ class StartWindow extends React.Component {
     this.state = {
       difficult: 'easy',
       fieldSize: '',
+      user: 'guest',
     };
-    this.handleSelectValue = this.handleSelectValue.bind(this);
-    this.handleSizeInput = this.handleSizeInput.bind(this);
-    this.startGame = this.startGame.bind(this);
   }
 
-  handleSelectValue(e) {
-    this.setState({ difficult: e.target.value });
+  handleSelectValue = ({ target }) => {
+    this.setState({ difficult: target.value });
   }
 
-  handleSizeInput(e) {
-    const { value } = e.target;
-    if (parseInt(value, 10) > 40) {
+  handleSizeInput = ({ target }) => {
+    const { value } = target;
+    const valueToNumber = parseInt(value, 10);
+    if (valueToNumber > 40) {
       return;
     }
-    this.setState({ fieldSize: value });
+    this.setState({ fieldSize: valueToNumber || '' });
   }
 
-  startGame({ target }) {
+  handleUserInput = ({ target }) => {
+    const { value } = target;
+    this.setState({ user: value });
+  }
+
+  startGame = ({ target }) => {
     const { onStart } = this.props;
     const autoPlay = target.innerText === 'Autoplay';
     onStart({ ...this.state, start: 'game', autoPlay });
   }
 
   render() {
-    const { difficult, fieldSize } = this.state;
+    const { difficult, fieldSize, user } = this.state;
+    const ladderBoard = JSON.parse(localStorage.getItem('results'));
+    const ladderBoardList = ladderBoard
+      ? ladderBoard.map((res, idx) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <tr key={idx}>
+          <td>{res.user}</td>
+          <td>{res.points}</td>
+          <td>{res.stopWatchDisplay}</td>
+        </tr>
+      ))
+      : <tr><td>Empty</td></tr>;
     return (
       <div className="window-start">
         <h1>Start Game</h1>
-        <h2>Best Score 1000</h2>
+        <label htmlFor="field-size">
+          Enter your name
+          <input value={user} placeholder="at least 3 letters" onChange={this.handleUserInput} id="user" type="text" />
+        </label>
+        <label htmlFor="field-size">
+          Select field size
+          <input value={fieldSize} placeholder="max value 40" onChange={this.handleSizeInput} id="field-size" type="text" />
+        </label>
         <select value={difficult} onChange={this.handleSelectValue} name="difficult" id="difficult">
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <label htmlFor="field-size">
-          Select field size
-          <input value={fieldSize} placeholder="max value 40" onChange={this.handleSizeInput} id="field-size" type="text" />
-        </label>
         <button onClick={this.startGame} type="submit">Normal Game</button>
         <button onClick={this.startGame} type="submit">Autoplay</button>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Points</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ladderBoardList}
+          </tbody>
+        </table>
       </div>
     );
   }

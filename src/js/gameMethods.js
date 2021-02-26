@@ -60,3 +60,17 @@ export const toggleFullScreen = () => {
     document.webkitCancelFullScreen();
   }
 };
+
+export const saveResultLS = (newResult) => {
+  const currResults = JSON.parse(localStorage.getItem('results'));
+  const newResults = [
+    ...currResults || [],
+    newResult,
+  ].sort((a, b) => b.points - a.points).slice(0, 10);
+  localStorage.setItem('results', JSON.stringify(newResults));
+};
+
+export const checkLSState = () => {
+  const lsState = JSON.parse(localStorage.getItem('state'));
+  return lsState || {};
+};

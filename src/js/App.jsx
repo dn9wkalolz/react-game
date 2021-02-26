@@ -1,18 +1,23 @@
 import React from 'react';
-import GameWindow from './SnakeRender';
+import GameWindow from './GameWindow';
 import StartWindow from './StartWindow';
 import EndWindow from './EndWindow';
+import { checkLSState } from './gameMethods';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+    const {
+      difficult, fieldSize, gamePhase, autoPlay, user,
+    } = checkLSState();
     this.state = {
-      difficult: null,
-      fieldSize: null,
-      gamePhase: 'start',
+      difficult: difficult || null,
+      fieldSize: fieldSize || null,
+      gamePhase: gamePhase || 'start',
       points: null,
       stopWatchDisplay: null,
-      autoPlay: null,
+      autoPlay,
+      user: user || null,
     };
   }
 
@@ -21,21 +26,29 @@ class App extends React.Component {
   }
 
   startGame = ({
-    difficult, fieldSize, start, autoPlay,
+    difficult, fieldSize, start, autoPlay, user,
   }) => {
     this.setState({
-      difficult, fieldSize, gamePhase: start, autoPlay,
+      difficult, fieldSize, gamePhase: start, autoPlay, user,
     });
   }
 
   render() {
     const {
-      difficult, fieldSize, gamePhase, points, stopWatchDisplay, autoPlay,
+      difficult, fieldSize, gamePhase, points, stopWatchDisplay, autoPlay, user,
     } = this.state;
     let component;
     if (gamePhase === 'start') component = <StartWindow onStart={this.startGame} />;
-    else if (gamePhase === 'game') component = <GameWindow difficult={difficult} fieldSize={fieldSize} onEnd={this.endGame} autoPlay={autoPlay} />;
-    else component = <EndWindow points={points} stopWatchDisplay={stopWatchDisplay} />;
+    else if (gamePhase === 'game') {
+      component = (
+        <GameWindow
+          {...{
+            difficult, fieldSize, autoPlay, user,
+          }}
+          onEnd={this.endGame}
+        />
+      );
+    } else component = <EndWindow {...{ points, stopWatchDisplay }} />;
     return (
       <>
         <h1>Snake Game</h1>

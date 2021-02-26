@@ -15,10 +15,10 @@ const [backgroundAudio, crossFoodAudio, crossMyselfAudio] = [
 ].map((audio) => new Audio(audio));
 
 let foodPosition;
-let isAutoplayOn;
-let snakeDirection = [DIRECTION.top];
+let autoPlay;
+let snakeDirection;
 let stopWatchDisplay = '0 : 00';
-let points = 0;
+let points;
 
 const getNewHead = (head, fieldSize) => {
   const { x, y } = head;
@@ -62,7 +62,7 @@ const manualSetSnake = (snakeState, fieldSize) => {
 };
 
 const setSnakePosition = (snakeState, fieldSize) => {
-  if (isAutoplayOn) {
+  if (autoPlay) {
     return autoSetSnake(snakeState, fieldSize);
   }
   return manualSetSnake(snakeState, fieldSize);
@@ -90,54 +90,67 @@ const handleChangeDirection = ({ keyCode }) => {
 class GameWindow extends React.Component {
   constructor(props) {
     super(props);
+    const {
+      snakePosition, stopwatch, backgroundVolume, effectsVolume, ...lsState
+    } = gameMethods.checkLSState();
     this.state = {
-      snakePosition: initialState,
-      moveTimer: null,
-      stopwatchTimer: null,
-      stopwatch: 0,
-      difficult: gameMethods.getDifficultValue(props.difficult),
-      fieldSize: parseInt(props.fieldSize, 10),
-      backgroundVolume: 10,
-      effectsVolume: 10,
+      snakePosition: snakePosition || initialState,
+      stopwatch: stopwatch || 0,
+      difficult: props.difficult,
+      fieldSize: props.fieldSize,
+      backgroundVolume: backgroundVolume || 10,
+      effectsVolume: effectsVolume || 10,
+      user: props.user,
     };
-    foodPosition = gameMethods.getRandomFoodPosition(props.fieldSize);
-    isAutoplayOn = props.autoPlay;
+    foodPosition = lsState.foodPosition || gameMethods.getRandomFoodPosition(props.fieldSize);
+    autoPlay = props.autoPlay;
+    const nativeArr = lsState.snakeDirection?.map((direct) => DIRECTION[direct.name]);
+    snakeDirection = nativeArr || [DIRECTION.top];
+    points = lsState.points || 0;
   }
 
   componentDidMount() {
+    const {
+      difficult, snakePosition, effectsVolume, backgroundVolume, stopwatch,
+    } = this.state;
+    gameMethods.changeVolume([crossFoodAudio, crossMyselfAudio], effectsVolume);
+    gameMethods.changeVolume([backgroundAudio], backgroundVolume);
     backgroundAudio.play();
-    const { difficult, snakePosition } = this.state;
     window.addEventListener('keydown', handleChangeDirection);
-    if (isAutoplayOn) {
+    if (autoPlay && stopwatch === 0) {
       const [head] = snakePosition;
       snakeDirection = getAutoDirection(head, foodPosition, snakeDirection[0]);
       window.removeEventListener('keydown', handleChangeDirection);
     }
-    const moveTimer = setInterval(this.move, difficult);
-    const stopwatchTimer = setInterval(this.startStopwatch, 1000);
-    this.setState({ moveTimer, stopwatchTimer });
+    this.moveTimer = setInterval(this.move, gameMethods.getDifficultValue(difficult));
+    this.stopwatchTimer = setInterval(this.startStopwatch, 1000);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { snakePosition, moveTimer } = this.state;
+    const { snakePosition } = this.state;
+    const { onEnd } = this.props;
+    const curState = JSON.stringify({
+      ...this.state, foodPosition, snakeDirection, points, autoPlay, gamePhase: 'game',
+    });
+    localStorage.setItem('state', curState);
     if (prevState.snakePosition !== snakePosition) {
-      const { onEnd } = this.props;
       if (gameMethods.isCrossWithMyself(snakePosition)) {
         crossMyselfAudio.play();
-        clearInterval(moveTimer);
+        clearInterval(this.moveTimer);
         onEnd('end', points, stopWatchDisplay);
+        localStorage.removeItem('state');
       }
     }
   }
 
   componentWillUnmount() {
-    const { moveTimer, stopwatchTimer } = this.state;
-    clearInterval(stopwatchTimer);
-    clearInterval(moveTimer);
+    const { user } = this.state;
+    clearInterval(this.stopwatchTimer);
     backgroundAudio.pause();
-    if (!isAutoplayOn) {
+    if (!autoPlay) {
       window.removeEventListener('keydown', this.handleChangeDirection);
     }
+    gameMethods.saveResultLS({ points, stopWatchDisplay, user });
   }
 
   move = () => {
@@ -213,10 +226,11 @@ class GameWindow extends React.Component {
 }
 
 GameWindow.propTypes = {
-  fieldSize: PropTypes.string.isRequired,
+  fieldSize: PropTypes.number.isRequired,
   difficult: PropTypes.string.isRequired,
-  onEnd: PropTypes.instanceOf(Function).isRequired,
   autoPlay: PropTypes.bool.isRequired,
+  user: PropTypes.string.isRequired,
+  onEnd: PropTypes.instanceOf(Function).isRequired,
 };
 
 export default GameWindow;

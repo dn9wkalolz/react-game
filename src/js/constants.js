@@ -1,8 +1,8 @@
 export const DIRECTION = {
-  left: { x: -1, y: 0 },
-  right: { x: 1, y: 0 },
-  top: { x: 0, y: -1 },
-  bottom: { x: 0, y: 1 },
+  left: { x: -1, y: 0, name: 'left' },
+  right: { x: 1, y: 0, name: 'right' },
+  top: { x: 0, y: -1, name: 'top' },
+  bottom: { x: 0, y: 1, name: 'bottom' },
 };
 
 export const initialState = [
