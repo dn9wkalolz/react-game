@@ -48,7 +48,7 @@ class App extends React.Component {
           onEnd={this.endGame}
         />
       );
-    } else component = <EndWindow {...{ points, stopWatchDisplay }} />;
+    } else component = <EndWindow {...{ points, stopWatchDisplay }} onEnd={this.endGame} />;
     return (
       <>
         <h1>Snake Game</h1>

@@ -7,7 +7,8 @@ class StartWindow extends React.Component {
     this.state = {
       difficult: 'easy',
       fieldSize: '',
-      user: 'guest',
+      user: '',
+      disabled: true,
     };
   }
 
@@ -18,15 +19,17 @@ class StartWindow extends React.Component {
   handleSizeInput = ({ target }) => {
     const { value } = target;
     const valueToNumber = parseInt(value, 10);
-    if (valueToNumber > 40) {
-      return;
+    let disabled = false;
+    if (valueToNumber > 40 || valueToNumber < 10) {
+      disabled = true;
     }
-    this.setState({ fieldSize: valueToNumber || '' });
+    this.setState({ fieldSize: valueToNumber || '', disabled });
   }
 
   handleUserInput = ({ target }) => {
     const { value } = target;
-    this.setState({ user: value });
+    const disabled = value.length < 1;
+    this.setState({ user: value, disabled });
   }
 
   startGame = ({ target }) => {
@@ -36,7 +39,9 @@ class StartWindow extends React.Component {
   }
 
   render() {
-    const { difficult, fieldSize, user } = this.state;
+    const {
+      difficult, fieldSize, user, disabled,
+    } = this.state;
     const ladderBoard = JSON.parse(localStorage.getItem('results'));
     const ladderBoardList = ladderBoard
       ? ladderBoard.map((res, idx) => (
@@ -53,19 +58,19 @@ class StartWindow extends React.Component {
         <h1>Start Game</h1>
         <label htmlFor="field-size">
           Enter your name
-          <input value={user} placeholder="at least 3 letters" onChange={this.handleUserInput} id="user" type="text" />
+          <input value={user} placeholder="at least 1 symbol" onChange={this.handleUserInput} id="user" type="text" />
         </label>
         <label htmlFor="field-size">
           Select field size
-          <input value={fieldSize} placeholder="max value 40" onChange={this.handleSizeInput} id="field-size" type="text" />
+          <input value={fieldSize} placeholder="value 10-40" onChange={this.handleSizeInput} id="field-size" type="text" />
         </label>
         <select value={difficult} onChange={this.handleSelectValue} name="difficult" id="difficult">
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <button onClick={this.startGame} type="submit">Normal Game</button>
-        <button onClick={this.startGame} type="submit">Autoplay</button>
+        <button onClick={this.startGame} type="submit" disabled={disabled}>Normal Game</button>
+        <button onClick={this.startGame} type="submit" disabled={disabled}>Autoplay</button>
         <table className="table">
           <thead>
             <tr>

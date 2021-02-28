@@ -91,14 +91,14 @@ class GameWindow extends React.Component {
   constructor(props) {
     super(props);
     const {
-      snakePosition, stopwatch, backgroundVolume, effectsVolume, ...lsState
+      snakePosition, stopwatch, effectsVolume, ...lsState
     } = gameMethods.checkLSState();
     this.state = {
       snakePosition: snakePosition || initialState,
       stopwatch: stopwatch || 0,
       difficult: props.difficult,
       fieldSize: props.fieldSize,
-      backgroundVolume: backgroundVolume || 10,
+      backgroundVolume: 0,
       effectsVolume: effectsVolume || 10,
       user: props.user,
     };
@@ -115,7 +115,6 @@ class GameWindow extends React.Component {
     } = this.state;
     gameMethods.changeVolume([crossFoodAudio, crossMyselfAudio], effectsVolume);
     gameMethods.changeVolume([backgroundAudio], backgroundVolume);
-    backgroundAudio.play();
     window.addEventListener('keydown', handleChangeDirection);
     if (autoPlay && stopwatch === 0) {
       const [head] = snakePosition;
@@ -162,8 +161,18 @@ class GameWindow extends React.Component {
     });
   }
 
+  onEnd = () => {
+    const { onEnd } = this.props;
+    clearInterval(this.moveTimer);
+    localStorage.removeItem('state');
+    onEnd('end', points, stopWatchDisplay);
+  }
+
   backgroundVolumeHandler = ({ target }) => {
     const { value } = target;
+    if (backgroundAudio.paused) {
+      backgroundAudio.play();
+    }
     gameMethods.changeVolume([backgroundAudio], value);
     this.setState({ backgroundVolume: value });
   }
@@ -218,7 +227,10 @@ class GameWindow extends React.Component {
             Effects Volume
             <input type="range" min="0" max="10" value={effectsVolume} onChange={this.effectsVolumeHandler} />
           </label>
-          <button type="submit" onClick={gameMethods.toggleFullScreen}>Full Screen mode</button>
+          <div>
+            <button type="submit" onClick={gameMethods.toggleFullScreen}>Full Screen mode</button>
+            <button type="submit" onClick={this.onEnd}>End Game</button>
+          </div>
         </div>
       </div>
     );
