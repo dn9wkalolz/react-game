@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Template from './SnakeTemplate';
 import { DIRECTION, initialState } from './constants';
 import * as gameMethods from './gameMethods';
-import backgroundSound from '../assets/beach.mp3';
+import backgroundSound from '../assets/backgroundTheme.mp3';
 import crossFoodSound from '../assets/true.mp3';
 import crossMyselfSound from '../assets/gameover.mp3';
 import getAutoDirection from './howToPlay';
@@ -174,12 +174,14 @@ class GameWindow extends React.Component {
       backgroundAudio.play();
     }
     gameMethods.changeVolume([backgroundAudio], value);
+    target.blur();
     this.setState({ backgroundVolume: value });
   }
 
   effectsVolumeHandler = ({ target }) => {
     const { value } = target;
     gameMethods.changeVolume([crossFoodAudio, crossMyselfAudio], value);
+    target.blur();
     this.setState({ effectsVolume: value });
   }
 
@@ -200,8 +202,8 @@ class GameWindow extends React.Component {
     } = this.state;
     const arr = gameMethods.getTemplate(fieldSize);
     return (
-      <div className="game" style={{ flexDirection: 'column' }}>
-        <div className="game__container" style={{ flexDirection: 'column' }}>
+      <div className="game">
+        <div className="game__container">
           <Template arr={arr} snakePosition={snakePosition} foodPosition={foodPosition} />
         </div>
         <div className="game__statistics">
@@ -217,17 +219,19 @@ class GameWindow extends React.Component {
           </span>
         </div>
         <div className="game__options">
-          <label htmlFor="sound">
-            {' '}
-            Background Volume
-            <input type="range" min="0" max="10" value={backgroundVolume} onChange={this.backgroundVolumeHandler} />
-          </label>
-          <label htmlFor="sound">
-            {' '}
-            Effects Volume
-            <input type="range" min="0" max="10" value={effectsVolume} onChange={this.effectsVolumeHandler} />
-          </label>
-          <div>
+          <div className="game__options__volume">
+            <label htmlFor="sound">
+              {' '}
+              Background Volume
+              <input type="range" min="0" max="10" value={backgroundVolume} onChange={this.backgroundVolumeHandler} />
+            </label>
+            <label htmlFor="sound">
+              {' '}
+              Effects Volume
+              <input type="range" min="0" max="10" value={effectsVolume} onChange={this.effectsVolumeHandler} />
+            </label>
+          </div>
+          <div className="game__options__buttons">
             <button type="submit" onClick={gameMethods.toggleFullScreen}>Full Screen mode</button>
             <button type="submit" onClick={this.onEnd}>End Game</button>
           </div>

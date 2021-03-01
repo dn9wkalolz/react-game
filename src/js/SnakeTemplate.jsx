@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const rowStyle = { width: '20px', height: '20px', textAlign: 'center' };
 const getElem = (y, x, snakePosition, foodPosition) => {
   if (y === foodPosition.y && x === foodPosition.x) {
     return '🍎';
@@ -17,10 +16,10 @@ const getElem = (y, x, snakePosition, foodPosition) => {
 
 const Template = ({ arr, snakePosition, foodPosition }) => {
   const template = arr.map((y) => (
-    <div style={{ display: 'flex' }} key={y}>
+    <div className="game__row" key={y}>
       {
       arr.map((x) => (
-        <div style={{ ...rowStyle }} key={x}>{getElem(y, x, snakePosition, foodPosition) || '﹡'}</div>
+        <div className="game__row__cell" key={x}>{getElem(y, x, snakePosition, foodPosition) || '﹡'}</div>
       ))
       }
     </div>

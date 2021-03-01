@@ -8,8 +8,18 @@ class StartWindow extends React.Component {
       difficult: 'easy',
       fieldSize: '',
       user: '',
-      disabled: true,
+      disabledSize: true,
+      disabledUser: true,
+      // disabled: true,
     };
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.startGameHotKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.startGameHotKey);
   }
 
   handleSelectValue = ({ target }) => {
@@ -18,18 +28,29 @@ class StartWindow extends React.Component {
 
   handleSizeInput = ({ target }) => {
     const { value } = target;
-    const valueToNumber = parseInt(value, 10);
-    let disabled = false;
-    if (valueToNumber > 40 || valueToNumber < 10) {
-      disabled = true;
+    const valueToNumber = +value;
+    let disabledSize = false;
+    if (valueToNumber > 32 || valueToNumber < 10) {
+      disabledSize = true;
     }
-    this.setState({ fieldSize: valueToNumber || '', disabled });
+    this.setState({ fieldSize: valueToNumber || '', disabledSize });
   }
 
   handleUserInput = ({ target }) => {
     const { value } = target;
-    const disabled = value.length < 1;
-    this.setState({ user: value, disabled });
+    const disabledUser = value.length < 1;
+    this.setState({ user: value, disabledUser });
+  }
+
+  startGameHotKey = (e) => {
+    const { disabledSize, disabledUser } = this.state;
+    if (e.keyCode !== 115 && e.keyCode !== 120) return;
+    if (!(disabledUser === disabledSize && disabledSize === false && disabledUser === false)) {
+      return;
+    }
+    const { onStart } = this.props;
+    const autoPlay = e.keyCode === 120;
+    onStart({ ...this.state, start: 'game', autoPlay });
   }
 
   startGame = ({ target }) => {
@@ -40,7 +61,7 @@ class StartWindow extends React.Component {
 
   render() {
     const {
-      difficult, fieldSize, user, disabled,
+      difficult, fieldSize, user, disabledSize, disabledUser,
     } = this.state;
     const ladderBoard = JSON.parse(localStorage.getItem('results'));
     const ladderBoardList = ladderBoard
@@ -62,16 +83,19 @@ class StartWindow extends React.Component {
         </label>
         <label htmlFor="field-size">
           Select field size
-          <input value={fieldSize} placeholder="value 10-40" onChange={this.handleSizeInput} id="field-size" type="text" />
+          <input value={fieldSize} placeholder="value 10-32" onChange={this.handleSizeInput} id="field-size" type="text" />
         </label>
         <select value={difficult} onChange={this.handleSelectValue} name="difficult" id="difficult">
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <button onClick={this.startGame} type="submit" disabled={disabled}>Normal Game</button>
-        <button onClick={this.startGame} type="submit" disabled={disabled}>Autoplay</button>
+        <div>
+          <button onClick={this.startGame} type="submit" disabled={!(disabledUser === disabledSize && disabledSize === false && disabledUser === false)}>Normal Game</button>
+          <button onClick={this.startGame} type="submit" disabled={!(disabledUser === disabledSize && disabledSize === false && disabledUser === false)}>Autoplay</button>
+        </div>
         <table className="table">
+          <caption>Ladder Board</caption>
           <thead>
             <tr>
               <th>Player</th>
@@ -83,6 +107,7 @@ class StartWindow extends React.Component {
             {ladderBoardList}
           </tbody>
         </table>
+        <h2>Press F4 to start Normal Game or F9 to start Autoplay</h2>
       </div>
     );
   }

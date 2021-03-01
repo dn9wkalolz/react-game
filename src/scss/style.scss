@@ -1,25 +1,208 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Varela Round', sans-serif;
 }
-#root, .window-start {
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: #35d1bf;
+}
+
+#root, .window-start, .window-end, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
+.title {
+    color: seagreen;
+    font-size: 40px;
+    text-shadow: 4px 2px 2px black;
+}
+
+.window-start {
+    background-color: #455A64;
+    color: #fff;
+    border: 5px solid #f8dfb4;
+    padding: 10px;
+    input, select, button {
+        margin: 10px 10px;
+    }
+    h1 {
+        text-shadow: 1px 2px black;
+    }
+    label {
+        font-size: 18px;
+        text-shadow: 1px 2px black;
+    }
+    input {
+        height: 30px;
+        border: 1px solid #d3d3d3;
+        border-radius: 6px;
+        outline: none;
+        padding: 0 10px;
+        font-size: 15px;
+
+    }
+    select {
+        outline: none;
+        border: 1px solid #d3d3d3;
+        border-radius: 3px;
+        font-size: 18px;
+        color: #455A64;
+    }
+    button {
+        height: 40px;
+        width: 130px;
+        padding: 0 5px;
+        border: 2px solid crimson;
+        background: crimson;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all .3s ease;
+        &:disabled {
+            background-color: #88898a;
+        }
+        &:hover {
+            color: crimson;
+            background: none;
+        }
+    }
+    h2 {
+        font-size: 19px;
+        text-shadow: 1px 2px black;
+    }
+    table {
+        font-size: 18px;
+        text-align: center;
+        margin: 10px 0;
+        text-shadow: 1px 2px black;
+        caption {
+            font-size: 25px;
+            font-weight: bold;
+        }
+        th, td {
+            padding: 3px 13px;
+        }
+        
+    }
+}
+
 .game {
     display: flex;
+    background-color: #455A64;
+    flex-direction: column;
     align-items: center;
-    &__container{
-        background-color: #CCC;
+    border: 5px solid #f8dfb4;
+    &__container {
+        margin: 10px;
+        background-color:#8d9194;
+        flex-direction: column;
+        font-size: 30px;
+        border: 2px solid #c4a913;
+    }
+    &__row {
+        display: flex;
+        &__cell {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            width: 23px;
+            height: 23px;
+        }
     }
     &__statistics {
         display: flex;
         justify-content: center;
+        text-shadow: 1px 2px black;
+        &__time, &__points {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
         &__points {
             margin-left: 10px;
         }
     }
+    &__options {
+        &__volume {
+            display: flex;
+            margin: 10px 10px;
+            text-shadow: 1px 2px black;
+            label {
+                margin-right: 10px;
+                color: #fff;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                input {
+                    margin-left: 10px;
+                }
+            }
+        }
+        &__buttons {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 10px;
+            button {
+                height: 40px;
+                width: 140px;
+                padding: 0 5px;
+                border: 2px solid crimson;
+                background: crimson;
+                color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all .3s ease;
+                &:hover {
+                    color: crimson;
+                    background: none;
+                }
+            }
+        }
+    }
+}
 
+.window-end {
+    background-color: #455A64;
+    color: #fff;
+    border: 5px solid #f8dfb4;
+    padding: 10px;
+    text-shadow: 1px 2px black;
+    h1 {
+        color: rgb(243, 87, 87);
+        margin-bottom: 10px;
+    }
+    span {
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    button {
+        height: 40px;
+        width: 140px;
+        padding: 0 5px;
+        border: 2px solid crimson;
+        background: crimson;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all .3s ease;
+        margin: 10px 0;
+        &:hover {
+            color: crimson;
+            background: none;
+        }
+    }
 }

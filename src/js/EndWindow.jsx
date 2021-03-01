@@ -4,34 +4,37 @@ import PropTypes from 'prop-types';
 const EndWindow = (props) => {
   const { points, stopWatchDisplay, onEnd } = props;
 
-  const onRestart = (e) => {
+  const onRestartHotKey = (e) => {
     if (e.keyCode !== 32) {
       return;
     }
     onEnd('start', null, null);
   };
 
+  const onRestart = () => {
+    onEnd('start', null, null);
+  };
+
   useEffect(() => {
-    window.addEventListener('keypress', onRestart);
+    window.addEventListener('keypress', onRestartHotKey);
     return () => {
-      window.removeEventListener('keypress', onRestart);
+      window.removeEventListener('keypress', onRestartHotKey);
     };
   });
 
   return (
-    <div>
-      <div>Game Over</div>
+    <div className="window-end">
+      <h1>Game Over</h1>
       <div>
         <span>
-          Points:
-          {points}
+          {`Points: ${points}`}
         </span>
         <span>
-          Time:
-          {stopWatchDisplay}
+          {`Time: ${stopWatchDisplay}`}
         </span>
-        <h2>Press space to restart</h2>
       </div>
+      <button type="submit" onClick={onRestart}>Restart</button>
+      <h2>Press space to restart</h2>
     </div>
   );
 };
