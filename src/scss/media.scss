@@ -1,0 +1,101 @@
+@media (max-width: 750px) {
+    .title {
+        font-size: 30px;
+    }
+    .window-start {
+        padding: 10px;
+        h1 {
+            font-size: 25px;
+        }
+        input, select, button {
+            margin: 10px 10px;
+        }
+        label, h2 {
+            font-size: 15px;
+        }
+        input {
+            height: 30px;
+            font-size: 14px;
+        }
+        select {
+            font-size: 14px;
+        }
+        button {
+            height: 40px;
+            width: 110px;
+            padding: 0 3px;
+            font-size: 14px;
+        }
+        table {
+            font-size: 15px;
+            text-align: center;
+            margin: 10px 0;
+            caption {
+                font-size: 18px;
+            }
+            th, td {
+                padding: 3px 10px;
+            }
+            
+        }
+    }
+    .game {
+        &__container {
+            font-size: 15px;
+        }
+        &__row__cell {
+            width: 12px;
+            height: 12px;
+        }
+        &__statistics {
+            &__time, &__points {
+                font-size: 15px;
+            }
+        }
+        &__options {
+            &__volume {
+                flex-direction: column;
+                label {
+                    justify-content: space-between;
+                    font-size: 13px;
+                }
+            }
+            &__buttons {
+                button {
+                    height: 30px;
+                    width: 110px;
+                    padding: 0 2px;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+    .window-end {
+        padding: 10px;
+        h1 {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+        span {
+            font-size: 14px;
+        }
+        button {
+            height: 30px;
+            width: 110px;
+            padding: 0 2px;
+            font-size: 12px;
+        }
+        h2 {
+            font-size: 15px;
+        }
+    }
+    footer {
+        width: 400px;
+        font-size: 14px;
+        .rs-logo {
+            &::before {
+                height: 13px;  
+            }
+        }
+    }
+}

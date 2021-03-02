@@ -126,7 +126,7 @@ class GameWindow extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { snakePosition } = this.state;
+    const { snakePosition, user } = this.state;
     const { onEnd } = this.props;
     const curState = JSON.stringify({
       ...this.state, foodPosition, snakeDirection, points, autoPlay, gamePhase: 'game',
@@ -137,19 +137,18 @@ class GameWindow extends React.Component {
         crossMyselfAudio.play();
         clearInterval(this.moveTimer);
         onEnd('end', points, stopWatchDisplay);
+        gameMethods.saveResultLS({ points, stopWatchDisplay, user });
         localStorage.removeItem('state');
       }
     }
   }
 
   componentWillUnmount() {
-    const { user } = this.state;
     clearInterval(this.stopwatchTimer);
     backgroundAudio.pause();
     if (!autoPlay) {
       window.removeEventListener('keydown', this.handleChangeDirection);
     }
-    gameMethods.saveResultLS({ points, stopWatchDisplay, user });
   }
 
   move = () => {

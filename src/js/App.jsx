@@ -3,7 +3,6 @@ import GameWindow from './GameWindow';
 import StartWindow from './StartWindow';
 import EndWindow from './EndWindow';
 import { checkLSState } from './gameMethods';
-import RS from '../assets/rs_school_js.svg';
 
 class App extends React.Component {
   constructor() {
@@ -55,11 +54,16 @@ class App extends React.Component {
         <h1 className="title">Snake Game</h1>
         { component }
         <footer>
-          <div><i className="fas fa-copyright"> Copyright, 2021</i></div>
-          <div><a href="https://rs.school/js/"><i className="fa fa-github">dn9wkalolz</i></a></div>
           <div>
-            <img src={RS} alt="123" />
-            <a href="https://rs.school/js/">RS School</a>
+            <i className="fas fa-copyright" />
+            <span>2021</span>
+          </div>
+          <div>
+            <i className="fa fa-github" />
+            <a href="https://github.com/dn9wkalolz" target="blank">dn9wkalolz</a>
+          </div>
+          <div className="rs-logo">
+            <a href="https://rs.school/js/" target="blank">RS School JS</a>
           </div>
         </footer>
       </>
