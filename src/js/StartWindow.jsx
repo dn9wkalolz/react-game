@@ -91,8 +91,8 @@ class StartWindow extends React.Component {
           <option value="hard">Hard</option>
         </select>
         <div>
-          <button onClick={this.startGame} type="submit" disabled={!(disabledUser === disabledSize && disabledSize === false && disabledUser === false)}>Normal Game</button>
-          <button onClick={this.startGame} type="submit" disabled={!(disabledUser === disabledSize && disabledSize === false && disabledUser === false)}>Autoplay</button>
+          <button onClick={this.startGame} type="submit" disabled={!(disabledSize === false && disabledUser === false)}>Normal Game</button>
+          <button onClick={this.startGame} type="submit" disabled={!(disabledSize === false && disabledUser === false)}>Autoplay</button>
         </div>
         <table className="table">
           <caption>Ladder Board</caption>
